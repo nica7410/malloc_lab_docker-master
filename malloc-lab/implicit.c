@@ -156,7 +156,14 @@ void *mm_realloc(void *ptr, size_t size)
 }
 
 
-
+// 1. [할당][free][할당]
+//       → 합칠 것 없음
+// 2. [할당][free][free]
+//       → 현재 + 다음
+// 3. [free][free][할당]
+//       → 이전 + 현재
+// 4. [free][free][free]
+//       → 이전 + 현재 + 다음
 static void *coalesce(void *bp)
 {
     size_t prev_alloc = GET_ALLOC(FTRP(PREV_BLKP(bp)));
